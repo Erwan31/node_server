@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
+const fs = require('fs');
 
 // Middleware
 app.use('/css', express.static(__dirname + "public/css"));
@@ -8,7 +9,8 @@ app.use('/', function( req, res, next){
     console.log(`Someone made a request: ${req.url}`);
     res.cookie('cookinename', '45454');
     next();
-})
+});
+app.use(bodyParser.json());
 
 
 app.get('/', function( req, res){
@@ -23,6 +25,17 @@ app.get('/', function( req, res){
     </html>
     `);
 });
+
+
+app.get('/adduser', function(req, res){
+    let HTML = fs.readFileSync(`${__dirname}/views/adduser.html`);
+    res.send(`${HTML}`);
+});
+
+app.post('/api/adduser', (req,res) => {
+    console.log(req.body);
+    res.sendStatus(200);
+})
 
 
 app.get('/api/user', function(req, res){
